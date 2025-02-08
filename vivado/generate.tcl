@@ -98,6 +98,7 @@ if {$clk_src == "IBUFG"} {
         set pins [lreplace $pins $idx $idx]
     }
 } elseif {$clk_src == "IBUFGDS" ||
+        $clk_src == "IBUFDS" ||
         $clk_src == "IBUFDS_GTE2" ||
         $clk_src == "IBUFDS_GTE3" ||
         $clk_src == "IBUFDS_GTE4"} {
@@ -154,6 +155,7 @@ module fpga
 if {$clk_src == "IBUFG"} {
     puts $fp "    input  wire clk,"
 } elseif {$clk_src == "IBUFGDS" ||
+        $clk_src == "IBUFDS" ||
         $clk_src == "IBUFDS_GTE2" ||
         $clk_src == "IBUFDS_GTE3" ||
         $clk_src == "IBUFDS_GTE4"} {
@@ -214,6 +216,24 @@ clk_ibufgds_inst (
 BUFG
 clk_bufg_inst (
     .I(clk_ibufgds),
+    .O(clk_int)
+);"
+
+} elseif {$clk_src == "IBUFDS"} {
+
+    puts $fp "// Clock sourced from differential input pin
+wire clk_ibufds;
+
+IBUFDS
+clk_ibufds_inst (
+    .I(clk_p),
+    .IB(clk_n),
+    .O(clk_ibufds)
+);
+
+BUFG
+clk_bufg_inst (
+    .I(clk_ibufds),
     .O(clk_int)
 );"
 
@@ -428,7 +448,8 @@ if {$clk_src == "IBUFG"} {
     puts $fp "set_property -dict {LOC [lindex $clk_pin 0] IOSTANDARD $clk_iostandard} \[get_ports clk\]
 create_clock -period $clk_period -name clk \[get_ports clk\]"
 
-} elseif {$clk_src == "IBUFGDS"} {
+} elseif {$clk_src == "IBUFGDS" ||
+	$clk_src == "IBUFDS"} {
 
     puts $fp "set_property -dict {LOC [lindex $clk_pin 0] IOSTANDARD $clk_iostandard} \[get_ports clk_p\]
 set_property -dict {LOC [lindex $clk_pin 1] IOSTANDARD $clk_iostandard} \[get_ports clk_n\]
