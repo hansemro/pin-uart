@@ -69,7 +69,7 @@ ise: $(PROJECT).ppr
 
 tmpclean::
 	-rm -rf *.log *.jou *.cache *.gen *.hbs *.hw *.ip_user_files *.runs *.ppr *.html *.xml *.sim *.srcs *.str .Xil defines.v
-	-rm -rf create_project.tcl update_config.tcl run_synth.tcl run_impl.tcl generate_bit.tcl
+	-rm -rf create_project.tcl update_config.tcl run_synth_impl.tcl
 
 clean:: tmpclean
 	-rm -rf *.bit program.tcl generate_mcs.tcl *.mcs *.prm flash.tcl
